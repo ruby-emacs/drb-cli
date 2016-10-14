@@ -18,15 +18,20 @@ And then execute:
 
 ## Usage
 
-start a drb debug server in your code's anywhere:
+### workflow
+
+1. Start a drb debug server in your code's anywhere. One way to start drb server
+   is in console like (irb or pry console, or Rails console). It just added
+   binding for console environment.
 
 ```ruby
 drb_start binding
 # Server running at druby://localhost:9000
 ```
-then run drb client command: 
 
-```ruby
+2. Then run drb client command on Ruby source code file to execute:
+
+```shell
 /your-gem-path/drb-cli/bin/drb file.rb 
 ```
 
