@@ -1,0 +1,2 @@
+#!/bin/bash
+ruby -e 'require "drbcli"; drb_start binding '
