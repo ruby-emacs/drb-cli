@@ -33,4 +33,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "ruby_parser"
   spec.add_dependency "method_source"
   spec.add_dependency "thor"
+  spec.add_dependency "activesupport"
 end
