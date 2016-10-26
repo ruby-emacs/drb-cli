@@ -3,12 +3,22 @@ require 'ruby_parser'
 require 'method_source'
 require 'drb'
 require 'thor'
-require 'activesupport'
+require 'active_support'
 
 $st_outputs = []
 class Object
   include MethodSource::CodeHelpers
-  include ActiveSupport::Inflector
+  def camelize(first_letter = :upper)
+    case first_letter
+    when :upper
+      ActiveSupport::Inflector.camelize(self, true)
+    when :lower
+      ActiveSupport::Inflector.camelize(self, false)
+    end
+  end
+  def underscore
+    ActiveSupport::Inflector.underscore(self)
+  end
   def stp (obj)
     $st_outputs = $st_outputs + [obj]
   end
