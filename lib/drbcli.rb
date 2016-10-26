@@ -3,10 +3,12 @@ require 'ruby_parser'
 require 'method_source'
 require 'drb'
 require 'thor'
+require 'activesupport'
 
 $st_outputs = []
 class Object
   include MethodSource::CodeHelpers
+  include ActiveSupport::Inflector
   def stp (obj)
     $st_outputs = $st_outputs + [obj]
   end
