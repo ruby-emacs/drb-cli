@@ -5,6 +5,23 @@ require 'drb'
 require 'thor'
 require 'active_support'
 
+# Usage: arrays.to_list #=> '("user_id" "name") 
+class Array
+  def to_list
+    inspect.gsub(/\[/, "(").gsub(/\]/, ")").gsub(/,/, "").sub(/^/, "'")
+  end
+end
+
+# Usage: hash.to_list(-> k { k.underscore }, -> v { v.nil? ? 'null' : v })  
+#=> '(("name" . "Steve") ("name2" . "Jobs") )'  
+class Hash
+  def to_list (key_proc, val_proc)
+    inject("") do |s, (k, v)|
+      s = s + " (\"#{key_proc.call(k)}\" . \"#{val_proc.call(v)}\") " ; s
+    end.to_s.sub(/^/, "'(").sub(/$/, ')')
+  end
+end
+
 $st_outputs = []
 class Object
   include MethodSource::CodeHelpers
