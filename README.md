@@ -9,7 +9,7 @@ TODO: Delete this and the text above, and describe your gem
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'drbcli', git: "https://github.com/ruby-emacs/drb-cli.git"
+gem 'drbcli', '~> 0.1.2', git: "https://github.com/ruby-emacs/drb-cli.git"
 ```
 
 And then execute:
