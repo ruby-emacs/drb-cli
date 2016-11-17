@@ -2,7 +2,6 @@
 # coding: utf-8
 dhost = ENV['DRB_HOST'] || 'localhost'
 require 'drb'
-DRb.start_service
 counterObj= DRbObject.new_with_uri  "druby://#{dhost}:9000"
 file_str = open(ARGV[0]){ |f| f.read }
 ARGV.shift
