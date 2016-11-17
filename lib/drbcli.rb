@@ -43,13 +43,13 @@ class Object
     $st_outputs = []
   end
   def drb_start drbenv
-    DRb.start_service 'druby://localhost:9000', drbenv
+    DRb.start_service 'druby://0.0.0.0:9000', drbenv
     puts "Server running at #{DRb.uri}"
     DRb.thread.join
   end
   # For ` alias rbsandbox=' RAILS_ENV=production rails c --sandbox '  `
   def drb_start_pro drbenv
-    DRb.start_service 'druby://localhost:9018', drbenv
+    DRb.start_service 'druby://0.0.0.0:9018', drbenv
     puts "Server running at #{DRb.uri}"
     DRb.thread.join
   end
