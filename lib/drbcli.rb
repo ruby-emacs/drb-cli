@@ -42,8 +42,14 @@ class Object
   def clear_st_outputs
     $st_outputs = []
   end
-  def drb_start drbenv
-    DRb.start_service 'druby://0.0.0.0:9000', drbenv
+  
+  def drb_start
+    (class << self; self; end).class_eval <<-EOF, __FILE__, __LINE__ + 1
+      def __drbcli__
+       ::Kernel.binding
+       end
+    EOF
+    DRb.start_service("druby://localhost:9000", self.__drbcli__)
     puts "Server running at #{DRb.uri}"
     DRb.thread.join
   end

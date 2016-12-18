@@ -3,15 +3,21 @@
 dhost = ENV['DRB_HOST'] || 'localhost'
 require 'drb'
 counterObj= DRbObject.new_with_uri  "druby://#{dhost}:9000"
-file_str = open(ARGV[0]){ |f| f.read }
+file_name = ARGV[0]
 ARGV.shift
 @drb_args = ARGV
+file_str = open(file_name){ |f| f.read }
 
 begin 
-  $stdout.print counterObj.eval("@drb_args = #{@drb_args};" + file_str) # 客户端文件内不要用puts,不然命令结果返回不了当前,而是返回服务端
+  $stdout.print counterObj.eval("@drb_args = #{@drb_args};" + file_str)
 rescue => e
-  #$stdout.print e.backtrace
-  $stdout.print e
+  $stderr.print e
+  $stderr.print "\n"
+  if e.backtrace.first =~ /__drbcli__/
+    $stderr.print "ERRO:#{file_name}:#{e.backtrace.first.split(/:([0-9]+):/)[1].to_i - 3}"
+  else
+    $stderr.print "ERRO:#{e.backtrace.first.split(/9000\) /).last}"
+  end
 end
 
 if counterObj.eval("$st_outputs.empty?")
