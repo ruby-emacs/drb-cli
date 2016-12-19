@@ -4,6 +4,59 @@ require 'method_source'
 require 'drb'
 require 'thor'
 require 'active_support'
+old_version = (2.4 > RUBY_VERSION.to_f and RUBY_VERSION.to_f >= 2.3)
+patch_method = -> {
+  # DRb::DRbServer.private_instance_methods(false) ;;=> :error_print
+  module DRb
+    class DRbServer
+      private
+      def error_print(exception)
+        exception.backtrace.inject(true) do |first, x|
+          if first
+            $stderr.puts "#{x}: #{exception} (#{exception.class})"
+          else
+            $stderr.puts "\tfrom #{x}"
+          end
+          false
+        end
+      end
+      #
+      def main_loop
+        client0 = @protocol.accept
+        return nil if !client0
+        Thread.start(client0) do |client|
+          @grp.add Thread.current
+          Thread.current['DRb'] = { 'client' => client ,
+                                    'server' => self }
+          DRb.mutex.synchronize do
+            client_uri = client.uri
+            @exported_uri << client_uri unless @exported_uri.include?(client_uri)
+          end
+          loop do
+            begin
+              succ = false
+              invoke_method = InvokeMethod.new(self, client)
+              succ, result = invoke_method.perform
+              error_print(result) if !succ && verbose
+              client.send_reply(succ, result)
+            rescue Exception => e
+              error_print(e) if verbose
+            ensure
+              client.close unless succ
+              if Thread.current['DRb']['stop_service']
+                Thread.new { stop_service }
+              end
+              break unless succ
+            end
+          end
+        end
+      end
+      #
+    end
+  end
+}
+
+patch_method.call if old_version
 
 # Usage: arrays.to_list #=> '("user_id" "name") 
 class Array
