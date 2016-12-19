@@ -5,11 +5,21 @@ require 'method_source'
 require 'drb'
 require 'thor'
 require 'active_support'
+require 'open3'
 class Object
   def log file
     open(file,'a') do |f|
       yield(f)
     end
+  end
+end
+class IOUndumpedProxy
+  include DRb::DRbUndumped
+  def initialize(obj)
+    @obj = obj
+  end
+  def puts(*lines)
+    @obj.puts(*lines)
   end
 end
 old_version = (2.4 > RUBY_VERSION.to_f and RUBY_VERSION.to_f >= 2.3)
@@ -48,7 +58,12 @@ patch_method = -> {
               # 这个才是我们要打印的错误输出
               #log("/Users/emacs/aaa.log"){ |f| f.puts result } if !succ && verbose
               ##$stderr.puts result if !succ && verbose# 输出不到客户端
-              raise result if !succ && verbose
+              # raise result if !succ && verbose 输出不到客户端
+              if !succ && verbose
+                ($stdout.print result) rescue 11
+                (DRb::DRbUndumped.new($stderr).puts result) rescue 22
+                (DRb::DRbUndumped.new($stdout).puts result) rescue 33
+              end
               client.send_reply(succ, result)
             rescue Exception => e
               # 这个是输出到server端的错误信息,但是没有我们要的drb文件执行错误信息
