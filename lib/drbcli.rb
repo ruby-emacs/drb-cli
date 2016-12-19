@@ -47,7 +47,8 @@ patch_method = -> {
               succ, result = invoke_method.perform
               # 这个才是我们要打印的错误输出
               #log("/Users/emacs/aaa.log"){ |f| f.puts result } if !succ && verbose
-              $stderr.puts result if !succ && verbose
+              ##$stderr.puts result if !succ && verbose# 输出不到客户端
+              raise result if !succ && verbose
               client.send_reply(succ, result)
             rescue Exception => e
               # 这个是输出到server端的错误信息,但是没有我们要的drb文件执行错误信息
