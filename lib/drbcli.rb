@@ -44,10 +44,10 @@ patch_method = -> {
               succ = false
               invoke_method = InvokeMethod.new(self, client)
               succ, result = invoke_method.perform
-              log("/Users/emacs/aaa#{Time.now.to_i}.log", result) if !succ && verbose
+              log("/Users/emacs/aaa.log", result) if !succ && verbose
               client.send_reply(succ, result)
             rescue Exception => e
-              log("/Users/emacs/bbb#{Time.now.to_i}.log", e) if verbose
+              error_print(e) if verbose
             ensure
               client.close unless succ
               if Thread.current['DRb']['stop_service']
