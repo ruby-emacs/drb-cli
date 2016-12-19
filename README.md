@@ -10,7 +10,7 @@ Add this line to your application's Gemfile:
 
 ```ruby
 ruby '~> 2.4.0'
-gem 'drbcli', '~> 0.1.3', git: "https://github.com/ruby-emacs/drb-cli.git"
+gem 'drbcli', '~> 0.1.4', git: "https://github.com/ruby-emacs/drb-cli.git"
 ```
 
 And then execute:
