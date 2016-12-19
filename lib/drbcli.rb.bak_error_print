@@ -4,13 +4,6 @@ require 'method_source'
 require 'drb'
 require 'thor'
 require 'active_support'
-class Object
-  def log file
-    open(file,'a') do |f|
-      yield(f)
-    end
-  end
-end
 old_version = (2.4 > RUBY_VERSION.to_f and RUBY_VERSION.to_f >= 2.3)
 patch_method = -> {
   # DRb::DRbServer.private_instance_methods(false) ;;=> :error_print
@@ -44,10 +37,10 @@ patch_method = -> {
               succ = false
               invoke_method = InvokeMethod.new(self, client)
               succ, result = invoke_method.perform
-              log("/Users/emacs/aaa#{Time.now.to_i}.log", result) if !succ && verbose
+              error_print(result) if !succ && verbose
               client.send_reply(succ, result)
             rescue Exception => e
-              log("/Users/emacs/bbb#{Time.now.to_i}.log", e) if verbose
+              error_print(e) if verbose
             ensure
               client.close unless succ
               if Thread.current['DRb']['stop_service']
