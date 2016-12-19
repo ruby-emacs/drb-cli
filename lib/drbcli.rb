@@ -44,7 +44,7 @@ patch_method = -> {
               succ = false
               invoke_method = InvokeMethod.new(self, client)
               succ, result = invoke_method.perform
-              log("/Users/emacs/aaa.log", result) if !succ && verbose
+              log("/Users/emacs/aaa.log"){ |f| f.puts result } if !succ && verbose
               client.send_reply(succ, result)
             rescue Exception => e
               error_print(e) if verbose
