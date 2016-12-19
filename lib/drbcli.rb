@@ -49,7 +49,11 @@ class Object
        ::Kernel.binding
        end
     EOF
-    DRb.start_service("druby://localhost:9000", self.__drbcli__)
+    if RUBY_VERSION.to_f >= 2.4
+      DRb.start_service("druby://localhost:9000", self.__drbcli__)
+    else
+      DRb.start_service("druby://localhost:9000", self.__drbcli__, verbose: true)
+    end
     puts "Server running at #{DRb.uri}"
     DRb.thread.join
   end
