@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-# Use: ./bin/edrb ~/uchang-web/app/views/users/shared/_links.html.erb
 erb_file = ARGV.shift
 file=` cat #{erb_file} ` 
 file_arr = file.split(/\n/)

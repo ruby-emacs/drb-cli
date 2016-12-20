@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+erb_file = ARGV.shift
+file=` cat #{erb_file} ` 
+file_arr = file.split(/\n/)
+code=(file_arr.map(&->line{ (line =~ /<%|%>/) ? line.gsub(/(.*)<%=(.*)%>(.*)/, 'stp (\2).to_p').gsub(/(.*)<%(.*)%>(.*)/, '\2') : nil }) - [nil] - [" drb_start "] ).join("\n")
+puts code
