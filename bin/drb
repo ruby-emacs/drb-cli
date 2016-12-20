@@ -25,5 +25,5 @@ else
 end
 counterObj.eval("clear_st_outputs")
 $stdout.print "\n"
-$stderr.print counterObj.eval("$log_record.last")
+$stderr.print counterObj.eval("$log_record.last").to_s.gsub(/connection closed/, '')
 
