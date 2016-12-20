@@ -62,7 +62,7 @@ patch_method = -> {
               # raise result if !succ && verbose 输出不到客户端
               if !succ && verbose
                 $log_record << result.to_s
-                ($stdout.print result) rescue 11
+                ####($stdout.print result) rescue 11
                 ##(DRb::DRbUndumped.new($stderr).puts result) rescue 22
                 ##(DRb::DRbUndumped.new($stdout).puts result) rescue 33
               end
