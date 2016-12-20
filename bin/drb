@@ -19,9 +19,11 @@ rescue => e
     $stderr.print "ERRO:#{e.backtrace.first.split(/9000\) /).last}"
   end
 end
-
 if counterObj.eval("$st_outputs.empty?")
 else
   $stdout.print counterObj.eval("'\n' + $st_outputs.join('\n')")
 end
 counterObj.eval("clear_st_outputs")
+$stdout.print "\n"
+$stderr.print counterObj.eval("$log_record.last")
+
