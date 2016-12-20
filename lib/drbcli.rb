@@ -7,6 +7,7 @@ require 'thor'
 require 'active_support'
 require 'open3'
 class Object
+  $log_record = []
   def log file
     open(file,'a') do |f|
       yield(f)
@@ -60,9 +61,10 @@ patch_method = -> {
               ##$stderr.puts result if !succ && verbose# 输出不到客户端
               # raise result if !succ && verbose 输出不到客户端
               if !succ && verbose
+                $log_record << result.to_s
                 ($stdout.print result) rescue 11
-                (DRb::DRbUndumped.new($stderr).puts result) rescue 22
-                (DRb::DRbUndumped.new($stdout).puts result) rescue 33
+                ##(DRb::DRbUndumped.new($stderr).puts result) rescue 22
+                ##(DRb::DRbUndumped.new($stdout).puts result) rescue 33
               end
               client.send_reply(succ, result)
             rescue Exception => e
