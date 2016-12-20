@@ -13,6 +13,9 @@ class Object
       yield(f)
     end
   end
+  def to_p
+    self.inspect
+  end
 end
 class IOUndumpedProxy
   include DRb::DRbUndumped
