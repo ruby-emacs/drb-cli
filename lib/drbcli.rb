@@ -70,7 +70,7 @@ patch_method = -> {
             rescue Exception => e
               # 这个是输出到server端的错误信息,但是没有我们要的drb文件执行错误信息
               # error_print(e) if verbose
-              log("/Users/emacs/bbb.log"){ |f| f.puts result } if verbose
+              log("/Users/emacs/bbb.log"){ |f| f.puts e.backtrace } if verbose
             ensure
               client.close unless succ
               if Thread.current['DRb']['stop_service']
