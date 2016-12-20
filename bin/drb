@@ -6,8 +6,18 @@ counterObj= DRbObject.new_with_uri  "druby://#{dhost}:9000"
 file_name = ARGV[0]
 ARGV.shift
 @drb_args = ARGV
-file_str = open(file_name){ |f| f.read }
-
+file_type = file_name.split(/\./).last
+##
+get_erb_code = -> file { 
+  file_arr = file.split(/\n/)
+  code=(file_arr.map(&->line{ (line =~ /<%|%>/) ? line.gsub(/%-|-%/, '%').gsub(/(.*)<%=(.*)%>(.*)/, 'stp (\2).to_p').gsub(/(.*)<%(.*)%>(.*)/, '\2') : nil }) - [nil] - [" drb_start "] ).join("\n")
+}
+##
+if file_type == "erb"
+  file_str = get_erb_code.call(open(file_name){ |f| f.read })
+else
+  file_str = open(file_name){ |f| f.read }
+end
 begin 
   $stdout.print counterObj.eval("@drb_args = #{@drb_args};" + file_str)
 rescue => e
